@@ -72,5 +72,29 @@ namespace dotnet_rpg.Services.CharacterService
             return serviceResponse;
 
         }
+
+        public async Task<ServiceResponse<GetCharacterDto>> DeleteCharacter(int id)
+        {
+            var serviceResponse = new ServiceResponse<GetCharacterDto>();
+
+            try
+            {
+                var character = characters.FirstOrDefault(c => c.Id == id);
+                if(character is null)
+                    throw new Exception($"Character with Id '{id}' not found.");
+
+                serviceResponse.Data = _mapper.Map<GetCharacterDto>(character);
+                serviceResponse.Message = "Your character has benn successfully deleted.";
+
+                characters.Remove(character);
+            }
+            catch (Exception ex) 
+            {
+                serviceResponse.Success = false;
+                serviceResponse.Message = ex.Message;
+            }
+
+            return serviceResponse;
+        }
     }
 }
